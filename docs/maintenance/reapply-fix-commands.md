@@ -105,3 +105,72 @@ Uma atualização pode substituir recursos internos dos JARs e invalidar overrid
 - reaplique apenas o ajuste ainda necessário;
 - valide sintaxe e inicialização;
 - teste no jogo quando a correção afetar drops, receitas, livros ou progressão.
+
+
+## 5. Advancements — Industrial Foregoing, Delightful e Legendary Monsters
+
+Os overrides abaixo foram criados a partir dos JSONs originais dos JARs. O script faz backup de um override anterior, quando existir, e altera somente o campo necessário. Execute na raiz do servidor:
+
+```bash
+sudo python3 <<'PY'
+import json
+import zipfile
+from pathlib import Path
+
+fixes = [
+    {
+        "jar": Path("mods/industrial-foregoing-1.20.1-3.5.22.jar"),
+        "source": "data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json",
+        "target": Path("kubejs/data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json"),
+        "edit": lambda data: data["criteria"]["has_item"]["conditions"]["items"][0].update({"tag": "forge:plastic"})
+            or data["criteria"]["has_item"]["conditions"]["items"][0].pop("items", None),
+    },
+    {
+        "jar": Path("mods/Delightful-1.20.1-3.8.1.jar"),
+        "source": "data/sob/advancements/get_prickly_pear.json",
+        "target": Path("kubejs/data/sob/advancements/get_prickly_pear.json"),
+        "icon": "minecraft:apple",
+    },
+    {
+        "jar": Path("mods/legendarymonsters-2.2.4 MC 1.20.1.jar"),
+        "source": "data/legendary_monsters/advancements/defeat_ambusher.json",
+        "target": Path("kubejs/data/legendary_monsters/advancements/defeat_ambusher.json"),
+        "icon": "legendary_monsters:chiseled_ancient_dripstone_shard",
+    },
+]
+
+for fix in fixes:
+    with zipfile.ZipFile(fix["jar"]) as jar:
+        data = json.loads(jar.read(fix["source"]))
+    target = fix["target"]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        target.with_suffix(target.suffix + ".bak").write_bytes(target.read_bytes())
+    if "edit" in fix:
+        predicate = data["criteria"]["has_item"]["conditions"]["items"][0]
+        predicate.pop("items", None)
+        predicate["tag"] = "forge:plastic"
+    else:
+        data["display"]["icon"]["item"] = fix["icon"]
+    target.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    print(f"Criado: {target}")
+PY
+
+sudo chown -R crafty:crafty kubejs/data/industrialforegoing kubejs/data/sob kubejs/data/legendary_monsters
+```
+
+Valide os três JSONs:
+
+```bash
+python3 -m json.tool kubejs/data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json > /dev/null
+python3 -m json.tool kubejs/data/sob/advancements/get_prickly_pear.json > /dev/null
+python3 -m json.tool kubejs/data/legendary_monsters/advancements/defeat_ambusher.json > /dev/null
+```
+
+No console do servidor, execute `/reload`. Depois confira o log:
+
+```bash
+grep -iE 'get_prickly_pear|defeat_ambusher|simulated_hydroponic_bed|Parsing error loading custom advancement|Unknown item id' logs/latest.log | tail -n 30
+```
+
+A validação registrada em 11/11/2026 não retornou linhas para essa busca. Isso confirma a ausência dos erros de carregamento correspondentes, não o desbloqueio funcional das conquistas.
