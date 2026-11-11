@@ -10,6 +10,11 @@
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
 
+## 2026-11-11 — ModernFix `dynamic_dfu` x Structurize
+
+- Corrigido o aviso do Structurize `Invalid DataFixer detected, schematics might not paste correctly!` (`org.embeddedt.modernfix.dfu.LazyDataFixer`) desligando `mixin.perf.dynamic_dfu` em `config/modernfix-mixins.properties`. Validado por reinicialização: 0 ocorrências do aviso e de `Bypassed Mojang DFU`.
+- Colagem de schematics não testada; custo da otimização desligada não medido; versões exatas dos JARs não registradas. Seção 11 adicionada ao runbook de reaplicação.
+
 ## 2026-11-11 — minVersion do Mixin do ftbxaerocompat (somente servidor)
 
 - ftbxaerocompat 1.4.0: corrigido `Mixin config ftbxaerocompat.mixins.json does not specify "minVersion" property` acrescentando `"minVersion": "0.8"` ao JSON dentro do JAR do servidor. Validado por reinicialização: 0 ocorrências de erro no log.

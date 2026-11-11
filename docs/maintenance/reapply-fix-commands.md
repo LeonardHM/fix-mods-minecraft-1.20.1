@@ -273,3 +273,22 @@ grep -ci 'ERROR.*ftbxaero' logs/latest.log   # esperado: 0
 ```
 
 Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Em atualização do mod, aplicar a regra da seção 7.
+
+
+## 11. ModernFix — desligar `dynamic_dfu` (Structurize)
+
+Correção documentada em [modernfix-dynamic-dfu-structurize.md](../fixes/modernfix-dynamic-dfu-structurize.md). Execute na raiz do servidor, com o servidor parado. Comandos executados:
+
+```bash
+sudo cp -a config/modernfix-mixins.properties config/modernfix-mixins.properties.original
+printf '\nmixin.perf.dynamic_dfu=false\n' | sudo tee -a config/modernfix-mixins.properties
+```
+
+Depois de reiniciar:
+
+```bash
+grep -c 'Invalid DataFixer' logs/latest.log      # esperado: 0
+grep -c 'Bypassed Mojang DFU' logs/latest.log    # esperado: 0
+```
+
+Rollback: com o servidor parado, restaurar `config/modernfix-mixins.properties.original`. Após atualizar o ModernFix, conferir se a opção ainda existe (regra da seção 7).
