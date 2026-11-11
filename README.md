@@ -18,6 +18,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 |---|---|---|
 | Mixins exclusivos do cliente | CreateBetterFPS, CoFH Core, AdvancedAE, Legendary Monsters | Movidos para a lista client somente os Mixins que referenciavam classes/APIs do cliente. |
 | Dados e receitas | SGJourney, Occultism | Corrigido o formato do JSON da tabela de endereços; removido override de receita Thorium vazio (0 bytes). |
+| Advancements | Industrial Foregoing, Delightful, Legendary Monsters | Corrigidos predicado de tag de itens e dois ícones que referenciavam itens inexistentes. |
 | Loot tables | Naturalist, MegaCells, ExtendedAE | Criados overrides KubeJS para corrigir o ID de drop da tartaruga e suprimir loot tables de interfaces EMC opcionais sem bloco registrado. |
 | Permissões/diretórios | ResourcefulLib | Criado /home/crafty com proprietário/grupo crafty e modo 0750. |
 | Datapack de compatibilidade | Citadel, SFM, Crypt Loot | Corrigidos 12 livros para o formato NBT da 1.20.1, substituída a loot table do Buffer por tabela vazia e corrigido o campo value para name. |
@@ -29,7 +30,8 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - As correções de dados/loot tables listadas foram validadas por reinicialização ou /reload, conforme indicado nos documentos individuais.
 - A correção do SFM foi aplicada posteriormente à primeira rodada de diagnóstico; portanto, não deve mais constar como erro pendente.
 - A correção de Radium/Arclight ainda é apenas uma mitigação investigativa, não uma solução concluída.
-- Permanecem diagnósticos pendentes, incluindo Industrial Foregoing, GregTech CEu, Patchouli, PneumaticCraft, tags e advancements. Consulte a lista de pendências antes de alterar outros arquivos.
+- As correções dos advancements de Industrial Foregoing, Delightful e Legendary Monsters foram validadas por `/reload`: os erros correspondentes deixaram de aparecer no log. Isso confirma o carregamento, não o desbloqueio funcional das conquistas.
+- Permanecem outros diagnósticos pendentes, incluindo GregTech CEu, Patchouli, PneumaticCraft, tags e advancements. Consulte a lista de pendências antes de alterar outros arquivos.
 
 ## Estrutura
 
