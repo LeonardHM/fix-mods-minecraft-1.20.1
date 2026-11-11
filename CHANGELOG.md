@@ -2,6 +2,13 @@
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
 
+## 2026-11-11 — consolidação da documentação
+
+- Expandido o README com um resumo das correções confirmadas e seus respectivos documentos de referência.
+- Corrigida a seção de erros remanescentes de loot tables: SFM foi removido da lista de pendências porque sua loot table foi corrigida posteriormente no datapack `compat_loot_fixes` e validada por `/reload`.
+- Mantidos como pendentes Maiden's Merry Making e Advanced Generators, sem presumir correções não confirmadas.
+- Reforçada a distinção entre validação de carregamento e teste funcional dentro do jogo.
+
 ## 2026-11-11
 
 - Criado o registro das quatro correções de Mixins client-only: CreateBetterFPS, CoFH Core, AdvancedAE e Legendary Monsters.
