@@ -100,6 +100,36 @@ Mensagem observada: `Expected name to be an item, was unknown string ...`
 
 Esses erros **não foram corrigidos** nessa janela. Devem permanecer na lista de diagnósticos pendentes.
 
+
+## 10. Datapack `compat_loot_fixes` — correções de loot tables
+
+Durante a rodada de correções com datapack, três grupos de erros foram tratados. As alterações foram recarregadas com `/reload`; os três erros correspondentes deixaram de aparecer no log.
+
+### Citadel — livros com formato NBT incompatível
+
+- **Escopo:** 12 entradas de livros nas loot tables do Citadel.
+- **Problema:** os dados dos livros estavam em formato incompatível com a versão 1.20.1.
+- **Correção:** converter os dados das 12 entradas para o formato NBT esperado pelo Minecraft 1.20.1.
+- **Validação:** após `/reload`, o erro do Citadel não reapareceu.
+- **Limite do registro:** o histórico disponível confirma a quantidade e a conversão, mas não preserva aqui os nomes individuais dos 12 arquivos. Não inventar nomes nem caminhos.
+
+### SFM — loot table do bloco Buffer
+
+- **Recurso corrigido no datapack:** `sfm:blocks/buffer` (arquivo `buffer.json`).
+- **Problema:** a loot table fazia referência a um recurso/ID inválido para a configuração ativa.
+- **Correção:** substituir a loot table por uma tabela vazia no datapack `compat_loot_fixes`.
+- **Validação:** após `/reload`, o erro de SFM não reapareceu.
+- **Observação:** o override vazio suprime drops dessa loot table; não altera o JAR do mod.
+
+### Crypt Loot — chave de campo incorreta
+
+- **Recurso:** loot table do datapack/mod identificado como `crypt_loot`.
+- **Problema:** campo `value` estava sendo usado onde o formato esperava `name`.
+- **Correção:** substituir a chave `value` por `name`, preservando o conteúdo restante da tabela.
+- **Validação:** após `/reload`, o erro correspondente não reapareceu.
+
+> O histórico recuperado confirma que essas três correções foram aplicadas no datapack `compat_loot_fixes` e validadas por `/reload`. Como não temos nesta revisão o conteúdo integral dos arquivos finais, não reproduzir JSONs completos nem supor caminhos específicos que não estejam preservados.
+
 ## Resultado consolidado da inicialização
 
 Após as alterações, o servidor chegou à inicialização dos mundos. Na validação do log, não reapareceram os erros anteriormente associados a:
