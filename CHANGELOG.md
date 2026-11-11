@@ -15,3 +15,11 @@ Alterações relevantes na documentação e nas correções registradas neste re
 - Incluídas as correções do datapack `compat_loot_fixes`: 12 livros do Citadel, loot table `sfm:blocks/buffer` e campo `value`→`name` em `crypt_loot`.
 - Atualizado o diagnóstico: SFM removido da lista de pendências após validação por `/reload`.
 - Mantidas como pendentes as referências de loot table de Maiden's Merry Making e Advanced Generators, além dos demais avisos ainda não investigados.
+
+
+## 2026-11-11 — runbooks de manutenção
+
+- Documentado como o Crafty inicia diretamente o JAR Arclight e como a versão Forge 47.4.10 foi fixada em `META-INF/installer.json`.
+- Incluídos comandos de backup, geração de JAR de teste, instalação, validação e rollback.
+- Criado runbook de comandos reaplicáveis para as correções de SGJourney, MegaCells e ResourcefulLib.
+- Identificadas explicitamente as correções cujo comando original/conteúdo integral não foi recuperado, evitando instruções presumidas.
