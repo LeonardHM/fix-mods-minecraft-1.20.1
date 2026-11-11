@@ -173,3 +173,36 @@ grep -iE 'get_prickly_pear|defeat_ambusher|simulated_hydroponic_bed|Parsing erro
 ```
 
 A validação registrada em 11/11/2026 não retornou linhas para essa busca. Isso confirma a ausência dos erros de carregamento correspondentes, não o desbloqueio funcional das conquistas.
+
+
+## 8. AllTheModium — `tconstruct:extra` → `tconstruct:binding` no JAR
+
+Correção documentada em [allthemodium-tconstruct-material-stats.md](../fixes/allthemodium-tconstruct-material-stats.md). Execute na raiz do servidor, com o servidor parado.
+
+O comando executado originalmente foi um heredoc Python equivalente; o script abaixo é a forma reutilizável (testada apenas em JAR sintético). Veja primeiro o que seria alterado:
+
+```bash
+sudo python3 scripts/patch_allthemodium_stats.py --dry-run mods/allthemodium-1.20.1-47.1.25-2.5.8.jar
+```
+
+Aplicar (cria `mods/allthemodium-1.20.1-47.1.25-2.5.8.jar.original` se ainda não existir):
+
+```bash
+sudo python3 scripts/patch_allthemodium_stats.py mods/allthemodium-1.20.1-47.1.25-2.5.8.jar
+```
+
+Validar o JAR:
+
+```bash
+for m in unobtainium vibranium allthemodium; do
+  unzip -p mods/allthemodium-1.20.1-47.1.25-2.5.8.jar data/allthemodium/tinkering/materials/stats/$m.json | grep -c 'tconstruct:extra'
+done   # esperado: 0 em cada linha
+```
+
+Depois de reiniciar:
+
+```bash
+grep -c 'tconstruct:extra' logs/latest.log   # esperado: 0
+```
+
+Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Em uma atualização do AllTheModium ou do Tinkers' Construct, aplicar a regra da seção 7 antes de reaplicar.

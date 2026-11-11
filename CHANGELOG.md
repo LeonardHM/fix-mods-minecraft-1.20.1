@@ -10,6 +10,13 @@
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
 
+## 2026-11-11 — Tinkers' Construct x AllTheModium
+
+- AllTheModium 2.5.8 / Tinkers' Construct 3.12.1.231: corrigido `Skipping unregistered material stat type 'tconstruct:extra'` (unobtainium, vibranium e allthemodium), trocando `tconstruct:extra` por `tconstruct:binding` vazio nos JSONs de stats dentro do JAR do AllTheModium. Validado por reinicialização: 0 ocorrências no log.
+- Registrada a tentativa com datapack `atm_fix`: foi carregado, mas o erro persistiu; removido.
+- Adicionados `scripts/patch_allthemodium_stats.py` (testado apenas em JAR sintético) e a seção 8 do runbook de reaplicação.
+- Removido o item Tinkers' Construct dos diagnósticos pendentes. Registrado como pendente, sem correção aplicada, o erro do coremod `field_to_method.js` causado pelo Access Transformer do Voidscape 1.5.389.
+
 ## 2026-11-11 — consolidação da documentação
 
 - Expandido o README com um resumo das correções confirmadas e seus respectivos documentos de referência.

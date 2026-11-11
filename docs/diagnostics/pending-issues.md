@@ -68,12 +68,29 @@ Foram observados os seguintes registros:
 
 **Estado:** pendente de verificar se são referências obsoletas, itens removidos/renomeados ou dados incompatíveis entre versões. O caso do Industrial Foregoing está descrito separadamente acima.
 
-## Tinkers' Construct — material stats não registrados
+## Coremod `field_to_method.js` — campo `Biome.climateSettings` público (Voidscape)
 
-- **Materiais citados:** `allthemodium:unobtainium`, `allthemodium:allthemodium`, `allthemodium:vibranium`
-- **Mensagem:** `Skipping unregistered material stat type 'tconstruct:extra'`
-- **Estado:** pendente.
-- **Hipótese:** incompatibilidade ou integração incompleta entre dados de materiais e Tinkers' Construct. Ainda não confirmada.
+- **Mod/JAR:** `Voidscape-1.20.1-1.5.389.jar`
+- **Mensagem (2 ocorrências no log de 11/11/2026):**
+  ```
+  Error occurred applying transform of coremod coremods/field_to_method.js function biome
+  java.lang.IllegalStateException: Field f_47437_ is not private and an instance field
+  ```
+- **Causa confirmada:** o Access Transformer do Voidscape (`META-INF/accesstransformer.cfg`, linha 15) torna o campo público:
+  ```
+  public net.minecraft.world.level.biome.Biome f_47437_ # climateSettings
+  ```
+  A mensagem do coremod indica que ele exige que o campo seja privado.
+- **Como o mod foi identificado:**
+  ```bash
+  for j in mods/*.jar; do
+    unzip -p "$j" META-INF/accesstransformer.cfg 2>/dev/null | grep -qE 'f_47437_|climateSettings' && echo "$j"
+  done
+  ```
+- **Estado:** causa confirmada; **nenhuma alteração aplicada** (decisão de manter). O servidor inicia; o impacto funcional não foi avaliado.
+- **Possível solução:** versão do Voidscape que não torne o campo público, se existir. Não verificado se há versão posterior à 1.5.389.
+
+> A correção do Tinkers' Construct x AllTheModium (`tconstruct:extra`), antes listada aqui, foi aplicada: ver `docs/fixes/allthemodium-tconstruct-material-stats.md`.
 
 ## ComputerCraft / Advanced Peripherals — métodos de integração
 
