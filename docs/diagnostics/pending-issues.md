@@ -99,3 +99,11 @@ Antes de marcar qualquer item como corrigido, registrar:
 3. causa confirmada (não apenas hipótese);
 4. alteração realizada e backup, quando aplicável;
 5. validação após reiniciar e, quando pertinente, teste funcional no jogo.
+
+
+## Mixins — BufferBuilder / ImmediatelyFast / ModernFix
+
+- Durante a análise de Mixins client-only, referências a `BufferBuilder` também apareceram em CreateBetterFPS, ImmediatelyFast e ModernFix.
+- CreateBetterFPS foi corrigido e validado conforme `docs/fixes/client-only-mixins.md`.
+- O histórico disponível não confirma alteração aplicada em ImmediatelyFast nem em ModernFix. Não desativar nem mover Mixins desses mods sem identificar a classe, o JSON exato e validar o efeito.
+- A identificação “ImmediatelyFast 1.20.4” foi esclarecida pelo usuário como apenas o nome do pacote; não deve ser tratada como evidência de que o servidor use Minecraft 1.20.4.
