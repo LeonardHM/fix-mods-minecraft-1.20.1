@@ -1,6 +1,6 @@
 # Correções de dados, loot tables e inicialização
 
-**Janela revisada:** 2026-11-10 10:17 até 2026-11-11 02:15 (America/Sao_Paulo)  
+**Janela revisada:** 2026-11-10 10:17 até 2026-11-11 02:53 (America/Sao_Paulo)  
 **Ambiente:** servidor Minecraft 1.20.1 em Arclight / Forge; versão Forge ativa confirmada: 47.4.10.  
 **Critério:** este documento registra somente alterações com evidência de execução e/ou validação no log. Itens sem confirmação suficiente ficam identificados como pendentes.
 
@@ -140,3 +140,42 @@ Após as alterações, o servidor chegou à inicialização dos mundos. Na valid
 - ResourcefulLib — `AccessDeniedException` em `/home/crafty`.
 
 A ausência dessas mensagens após reinicialização confirma a correção do erro de inicialização correspondente; não substitui testes funcionais específicos dentro do jogo.
+
+
+## 11. Advancements — Industrial Foregoing, Delightful e Legendary Monsters
+
+As três correções abaixo foram aplicadas por overrides em `kubejs/data/` e verificadas com `/reload`. A consulta posterior ao `logs/latest.log` não retornou ocorrências dos três advancements nem das mensagens `Parsing error loading custom advancement` ou `Unknown item id` associadas a eles.
+
+### Industrial Foregoing 3.5.22 — tag de plástico no predicado
+
+- **Recurso original:** `data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json`, extraído de `industrial-foregoing-1.20.1-3.5.22.jar`.
+- **Erro original:** `Unknown item id 'forge:plastic'`.
+- **Causa:** o advancement usava `forge:plastic` como se fosse um ID de item no campo `items`. Trata-se de uma tag de itens.
+- **Override:** `kubejs/data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json`.
+- **Correção:** no predicado `criteria.has_item.conditions.items[0]`, substituir a propriedade `items` pela propriedade `tag`, com valor `forge:plastic`:
+  ```json
+  {
+    "tag": "forge:plastic"
+  }
+  ```
+- **Validação:** após `/reload`, a busca por `simulated_hydroponic_bed`, `Unknown item id` e erros de parsing de advancements não retornou mensagens correspondentes.
+
+### Delightful 3.8.1 — ícone inexistente em `sob:get_prickly_pear`
+
+- **Recurso original:** `data/sob/advancements/get_prickly_pear.json`, dentro de `Delightful-1.20.1-3.8.1.jar`.
+- **Erro original:** `Expected item to be an item, was unknown string 'sob:prickly_pear'`.
+- **Causa:** o campo `display.icon.item` apontava para `sob:prickly_pear`, que não está registrado pelo JAR. A tag `forge:fruits/prickly_pear` contém `ecologics:prickly_pear` como valor opcional (`required: false`).
+- **Override:** `kubejs/data/sob/advancements/get_prickly_pear.json`.
+- **Correção:** alterar somente `display.icon.item` para `minecraft:apple`. O critério original, que verifica a tag `forge:fruits/prickly_pear`, foi preservado.
+- **Validação:** após `/reload`, a busca por `get_prickly_pear` e erros de parsing de advancements não retornou mensagens correspondentes.
+
+### Legendary Monsters 2.2.4 — ícone inexistente em `defeat_ambusher`
+
+- **Recurso original:** `data/legendary_monsters/advancements/defeat_ambusher.json`, dentro de `legendarymonsters-2.2.4 MC 1.20.1.jar`.
+- **Erro original:** `Expected item to be an item, was unknown string 'legendary_monsters:ancient_dripstone_shard'`.
+- **Causa:** o advancement referenciava um ID inexistente no campo `display.icon.item`. O JAR contém o item `legendary_monsters:chiseled_ancient_dripstone_shard`, confirmado pelo modelo do item e pela loot table do Ambusher.
+- **Override:** `kubejs/data/legendary_monsters/advancements/defeat_ambusher.json`.
+- **Correção:** alterar somente `display.icon.item` para `legendary_monsters:chiseled_ancient_dripstone_shard`. O critério original `minecraft:player_killed_entity` para `legendary_monsters:ambusher` foi preservado.
+- **Validação:** após `/reload`, a busca por `defeat_ambusher` e erros de parsing de advancements não retornou mensagens correspondentes.
+
+> **Limite da validação:** a ausência dos erros confirma que os três advancements foram aceitos pelo carregador após `/reload`. Não foi registrado teste dentro do jogo para confirmar o desbloqueio de cada conquista. Os arquivos originais dos JARs não foram modificados.
