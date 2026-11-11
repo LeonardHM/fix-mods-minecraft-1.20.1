@@ -90,13 +90,13 @@ Quando os comandos originais ou arquivos finais forem recuperados, acrescentar p
 
 Não copiar um override de uma versão antiga do mod sem comparar o recurso original da versão nova.
 
-## 5. Relacionamento com os demais runbooks
+## 6. Relacionamento com os demais runbooks
 
 - Fixação da versão Forge no JAR Arclight: [Arclight — inicialização e fixação do Forge](../maintenance/arclight-forge-version-pinning.md).
 - Correções de Mixins client-only: [client-only-mixins.md](../fixes/client-only-mixins.md).
 - Correções de dados e loot tables: [data-and-loot-table-fixes.md](../fixes/data-and-loot-table-fixes.md).
 
-## 6. Regra para atualização de mods
+## 7. Regra para atualização de mods
 
 Uma atualização pode substituir recursos internos dos JARs e invalidar overrides. Antes de reaplicar:
 - compare o recurso da versão nova com o recurso que motivou a correção;
@@ -122,8 +122,7 @@ fixes = [
         "jar": Path("mods/industrial-foregoing-1.20.1-3.5.22.jar"),
         "source": "data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json",
         "target": Path("kubejs/data/industrialforegoing/advancements/recipes/misc/simulated_hydroponic_bed.json"),
-        "edit": lambda data: data["criteria"]["has_item"]["conditions"]["items"][0].update({"tag": "forge:plastic"})
-            or data["criteria"]["has_item"]["conditions"]["items"][0].pop("items", None),
+        "tag_predicate": True,
     },
     {
         "jar": Path("mods/Delightful-1.20.1-3.8.1.jar"),
@@ -146,13 +145,13 @@ for fix in fixes:
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists():
         target.with_suffix(target.suffix + ".bak").write_bytes(target.read_bytes())
-    if "edit" in fix:
+    if fix.get("tag_predicate"):
         predicate = data["criteria"]["has_item"]["conditions"]["items"][0]
         predicate.pop("items", None)
         predicate["tag"] = "forge:plastic"
     else:
         data["display"]["icon"]["item"] = fix["icon"]
-    target.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    target.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Criado: {target}")
 PY
 
