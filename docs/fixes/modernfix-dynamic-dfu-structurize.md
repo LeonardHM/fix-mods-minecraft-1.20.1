@@ -16,7 +16,10 @@ The following DataFixer was added: class org.embeddedt.modernfix.dfu.LazyDataFix
 
 ## Mods e versões
 
-Structurize e ModernFix. As versões exatas dos JARs **não foram registradas** nesta correção.
+| Mod | Arquivo |
+|---|---|
+| ModernFix | `modernfix-forge-5.27.91+mc1.20.1.jar` |
+| Structurize | `structurize-1.20.1-1.0.825-snapshot.jar` |
 
 ## Causa
 

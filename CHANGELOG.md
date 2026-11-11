@@ -13,7 +13,7 @@ Alterações relevantes na documentação e nas correções registradas neste re
 ## 2026-11-11 — ModernFix `dynamic_dfu` x Structurize
 
 - Corrigido o aviso do Structurize `Invalid DataFixer detected, schematics might not paste correctly!` (`org.embeddedt.modernfix.dfu.LazyDataFixer`) desligando `mixin.perf.dynamic_dfu` em `config/modernfix-mixins.properties`. Validado por reinicialização: 0 ocorrências do aviso e de `Bypassed Mojang DFU`.
-- Colagem de schematics não testada; custo da otimização desligada não medido; versões exatas dos JARs não registradas. Seção 11 adicionada ao runbook de reaplicação.
+- Colagem de schematics não testada; custo da otimização desligada não medido. Versões: ModernFix 5.27.91, Structurize 1.0.825-snapshot. Seção 11 adicionada ao runbook de reaplicação.
 
 ## 2026-11-11 — minVersion do Mixin do ftbxaerocompat (somente servidor)
 
