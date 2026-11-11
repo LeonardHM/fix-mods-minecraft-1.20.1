@@ -206,3 +206,36 @@ grep -c 'tconstruct:extra' logs/latest.log   # esperado: 0
 ```
 
 Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Em uma atualização do AllTheModium ou do Tinkers' Construct, aplicar a regra da seção 7 antes de reaplicar.
+
+
+## 9. Reborn Storage — `use_resource_pack` no `book.json` (somente servidor)
+
+Correção documentada em [rebornstorage-patchouli-book.md](../fixes/rebornstorage-patchouli-book.md). Execute na raiz do servidor, com o servidor parado. Comando executado:
+
+```bash
+J=mods/rebornstorage-1.20.1-5.0.7.jar
+sudo cp -a $J $J.original
+sudo python3 - "$J" <<'EOF'
+import sys, json, shutil, tempfile, os, zipfile
+jar = sys.argv[1]
+name = "data/rebornstorage/patchouli_books/rs_book/book.json"
+tmp = os.path.join(tempfile.mkdtemp(), "new.jar")
+with zipfile.ZipFile(jar) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+    for i in zin.infolist():
+        data = zin.read(i.filename)
+        if i.filename == name:
+            d = json.loads(data); d["use_resource_pack"] = True
+            data = (json.dumps(d, indent=2) + "\n").encode()
+        zout.writestr(i, data)
+shutil.copyfile(tmp, jar)
+EOF
+unzip -p $J data/rebornstorage/patchouli_books/rs_book/book.json
+```
+
+A saída deve conter `"use_resource_pack": true`. Depois de reiniciar:
+
+```bash
+grep -c 'rebornstorage:rs_book' logs/latest.log   # esperado: 0
+```
+
+Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Não altera os clientes. Em atualização do mod, aplicar a regra da seção 7.

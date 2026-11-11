@@ -23,6 +23,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 | Permissões/diretórios | ResourcefulLib | Criado /home/crafty com proprietário/grupo crafty e modo 0750. |
 | Datapack de compatibilidade | Citadel, SFM, Crypt Loot | Corrigidos 12 livros para o formato NBT da 1.20.1, substituída a loot table do Buffer por tabela vazia e corrigido o campo value para name. |
 | Inicialização | Arclight / Forge | Fixada e validada a versão Forge 47.4.10 no metadado META-INF/installer.json do JAR Arclight. |
+| Livro do Patchouli | Reborn Storage 5.0.7, Patchouli 1.20.1-85 | Adicionado `use_resource_pack: true` ao `book.json` no JAR do servidor (somente servidor; clientes inalterados). |
 | Materiais do Tinkers' Construct | AllTheModium 2.5.8, Tinkers' Construct 3.12.1.231 | Trocado `tconstruct:extra` por `tconstruct:binding` vazio nos stats de unobtainium, vibranium e allthemodium, dentro do JAR do AllTheModium. |
 
 ### Resultado e ressalvas
@@ -33,6 +34,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - A correção de Radium/Arclight ainda é apenas uma mitigação investigativa, não uma solução concluída.
 - As correções dos advancements de Industrial Foregoing, Delightful e Legendary Monsters foram validadas por `/reload`: os erros correspondentes deixaram de aparecer no log. Isso confirma o carregamento, não o desbloqueio funcional das conquistas.
 - A correção Tinkers' Construct x AllTheModium foi validada por reinicialização (`tconstruct:extra` deixou de aparecer no log); o uso desses materiais no jogo não foi testado.
+- A correção do livro do Reborn Storage vale só para o servidor: o erro sumiu do log do servidor, mas os clientes mantêm o JAR original e continuam sem o livro.
 - Permanecem outros diagnósticos pendentes, incluindo GregTech CEu, Patchouli, PneumaticCraft, tags e advancements. Consulte a lista de pendências antes de alterar outros arquivos.
 
 ## Estrutura
@@ -50,6 +52,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - [Correções de Mixins client-only](docs/fixes/client-only-mixins.md)
 - [Correções de dados e loot tables](docs/fixes/data-and-loot-table-fixes.md)
 - [Tinkers' Construct x AllTheModium: stats de materiais](docs/fixes/allthemodium-tconstruct-material-stats.md)
+- [Reborn Storage: livro do Patchouli (somente servidor)](docs/fixes/rebornstorage-patchouli-book.md)
 - [Diagnósticos pendentes](docs/diagnostics/pending-issues.md)
 
 ## Regras

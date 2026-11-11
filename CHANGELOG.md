@@ -10,6 +10,12 @@
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
 
+## 2026-11-11 — livro do Patchouli do Reborn Storage (somente servidor)
+
+- Reborn Storage 5.0.7 / Patchouli 1.20.1-85: corrigido `Failed to load book rebornstorage:rs_book` (`use_resource_pack set to false`) acrescentando `"use_resource_pack": true` ao `book.json` no JAR do servidor. Validado por reinicialização: 0 ocorrências no log.
+- Os clientes não foram alterados e continuam sem o livro; a correção completa não foi aplicada nem testada.
+- Item Patchouli atualizado nos diagnósticos pendentes (causa confirmada, estado parcial); seção 9 adicionada ao runbook de reaplicação.
+
 ## 2026-11-11 — Tinkers' Construct x AllTheModium
 
 - AllTheModium 2.5.8 / Tinkers' Construct 3.12.1.231: corrigido `Skipping unregistered material stat type 'tconstruct:extra'` (unobtainium, vibranium e allthemodium), trocando `tconstruct:extra` por `tconstruct:binding` vazio nos JSONs de stats dentro do JAR do AllTheModium. Validado por reinicialização: 0 ocorrências no log.

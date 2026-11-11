@@ -31,9 +31,10 @@ Também foram observados avisos/erros relacionados a receitas do GregTech CEu. D
 
 ## Patchouli — livro de Reborn Storage
 
-- **Mensagem:** falha ao carregar o livro `rebornstorage:rs_book`.
-- **Estado:** pendente.
-- **Ainda não determinado:** se o recurso está ausente, malformado, incompatível ou se o erro é apenas de conteúdo/documentação.
+- **Mensagem:** falha ao carregar o livro `rebornstorage:rs_book` (`use_resource_pack set to false. This behaviour was removed in 1.20`).
+- **Causa confirmada:** o `book.json` do Reborn Storage 5.0.7 não declara `use_resource_pack` e o conteúdo está em `data/`; o Patchouli 1.20.1 não aceita isso.
+- **Estado:** corrigido **somente no servidor** (erro sumiu do log); clientes seguem com o erro e sem o livro. Ver `docs/fixes/rebornstorage-patchouli-book.md`.
+- **Pendente:** correção completa (mod atualizado ou JAR alterado também nos clientes), não aplicada.
 
 ## PneumaticCraft — consulta de receitas sem mundo
 
