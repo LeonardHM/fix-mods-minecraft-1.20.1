@@ -1,3 +1,11 @@
+## 2026-11-11 — correções de advancements
+
+- Industrial Foregoing 3.5.22: corrigido o predicado do advancement `simulated_hydroponic_bed`, usando `tag: forge:plastic` em vez de tratar a tag como ID de item.
+- Delightful 3.8.1: corrigido o ícone inválido de `sob:get_prickly_pear` para `minecraft:apple`, preservando o critério original baseado na tag de frutas.
+- Legendary Monsters 2.2.4: corrigido o ícone inválido de `defeat_ambusher` para `legendary_monsters:chiseled_ancient_dripstone_shard`, preservando o critério de morte do Ambusher.
+- As três correções foram aplicadas por overrides KubeJS e validadas por `/reload`; a busca posterior no `latest.log` não retornou os erros correspondentes.
+- Documentadas as correções e o procedimento de reaplicação no guia de dados/loot tables e no runbook.
+
 # Changelog
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
