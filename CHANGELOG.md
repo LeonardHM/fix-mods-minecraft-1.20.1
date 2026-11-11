@@ -10,6 +10,11 @@
 
 Alterações relevantes na documentação e nas correções registradas neste repositório.
 
+## 2026-11-11 — minVersion do Mixin do ftbxaerocompat (somente servidor)
+
+- ftbxaerocompat 1.4.0: corrigido `Mixin config ftbxaerocompat.mixins.json does not specify "minVersion" property` acrescentando `"minVersion": "0.8"` ao JSON dentro do JAR do servidor. Validado por reinicialização: 0 ocorrências de erro no log.
+- Clientes não alterados. Item removido dos diagnósticos pendentes; seção 10 adicionada ao runbook de reaplicação.
+
 ## 2026-11-11 — livro do Patchouli do Reborn Storage (somente servidor)
 
 - Reborn Storage 5.0.7 / Patchouli 1.20.1-85: corrigido `Failed to load book rebornstorage:rs_book` (`use_resource_pack set to false`) acrescentando `"use_resource_pack": true` ao `book.json` no JAR do servidor. Validado por reinicialização: 0 ocorrências no log.

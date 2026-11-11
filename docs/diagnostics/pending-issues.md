@@ -103,12 +103,6 @@ Foram observadas mensagens indicando que métodos de integração não possuem o
 
 **Estado:** pendente de identificar as versões envolvidas e verificar se a integração está funcionalmente afetada.
 
-## Aviso de configuração Mixin
-
-- **Mensagem:** `ftbxaerocompat.mixins.json does not specify "minVersion" property`
-- **Estado:** aviso de configuração/qualidade; sem falha funcional confirmada.
-- **Ação:** nenhuma alteração aplicada.
-
 ## Critério para encerrar um diagnóstico
 
 Antes de marcar qualquer item como corrigido, registrar:

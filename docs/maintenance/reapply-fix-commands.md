@@ -239,3 +239,37 @@ grep -c 'rebornstorage:rs_book' logs/latest.log   # esperado: 0
 ```
 
 Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Não altera os clientes. Em atualização do mod, aplicar a regra da seção 7.
+
+
+## 10. ftbxaerocompat — `minVersion` no `ftbxaerocompat.mixins.json` (somente servidor)
+
+Correção documentada em [ftbxaerocompat-mixin-minversion.md](../fixes/ftbxaerocompat-mixin-minversion.md). Execute na raiz do servidor, com o servidor parado. Comando executado:
+
+```bash
+J=mods/ftbxaerocompat-forge-1.4.0-1.20.1.jar
+sudo cp -a $J $J.original
+sudo python3 - "$J" <<'EOF'
+import sys, json, shutil, tempfile, os, zipfile
+jar = sys.argv[1]
+name = "ftbxaerocompat.mixins.json"
+tmp = os.path.join(tempfile.mkdtemp(), "new.jar")
+with zipfile.ZipFile(jar) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+    for i in zin.infolist():
+        data = zin.read(i.filename)
+        if i.filename == name:
+            d = json.loads(data)
+            d = {"required": d.pop("required"), "minVersion": "0.8", **d}
+            data = (json.dumps(d, indent=2) + "\n").encode()
+        zout.writestr(i, data)
+shutil.copyfile(tmp, jar)
+EOF
+unzip -p $J ftbxaerocompat.mixins.json | head -4
+```
+
+A saída deve mostrar `"minVersion": "0.8"` logo após `required`. Depois de reiniciar:
+
+```bash
+grep -ci 'ERROR.*ftbxaero' logs/latest.log   # esperado: 0
+```
+
+Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Em atualização do mod, aplicar a regra da seção 7.
