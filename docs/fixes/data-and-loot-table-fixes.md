@@ -86,19 +86,18 @@
 - **Não há evidência suficiente de backup nem de validação após reinicialização** para declarar esse item corrigido.
 - Portanto, manter como investigação/mitigação pendente, não como correção confirmada.
 
-## 9. Erros de loot table que permaneceram após as correções
+## 9. Erros de loot table que permaneceram após a primeira rodada
 
-Na inicialização de validação, ainda foram reportados IDs de itens desconhecidos nas seguintes loot tables:
+Na inicialização de validação da primeira rodada, ainda foram reportados IDs de itens desconhecidos nas seguintes loot tables:
 
 | Mod/recurso | Referência |
 |---|---|
 | Maiden's Merry Making | `maidensmerrymaking:blocks/roof_bamboo_stairs` |
-| SFM | `sfm:blocks/buffer` |
 | Advanced Generators | `advgenerators:blocks/eu_output_iv`, `eu_output_hv`, `eu_output_ev`, `eu_output_mv`, `eu_output_lv` |
 
 Mensagem observada: `Expected name to be an item, was unknown string ...`
 
-Esses erros **não foram corrigidos** nessa janela. Devem permanecer na lista de diagnósticos pendentes.
+Esses erros permaneceram sem correção confirmada no registro desta revisão. **SFM não está incluído nesta lista:** sua loot table foi corrigida posteriormente no datapack `compat_loot_fixes`, conforme a seção seguinte, e o erro deixou de aparecer após `/reload`.
 
 
 ## 10. Datapack `compat_loot_fixes` — correções de loot tables
