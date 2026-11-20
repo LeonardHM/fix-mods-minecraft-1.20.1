@@ -292,3 +292,38 @@ grep -c 'Bypassed Mojang DFU' logs/latest.log    # esperado: 0
 ```
 
 Rollback: com o servidor parado, restaurar `config/modernfix-mixins.properties.original`. Após atualizar o ModernFix, conferir se a opção ainda existe (regra da seção 7).
+
+
+## 12. Deeper and Darker — override das receitas de Resonarium
+
+Correção documentada em [deeperdarker-resonarium-smithing.md](../fixes/deeperdarker-resonarium-smithing.md). Execute na raiz do servidor. Comandos executados:
+
+```bash
+sudo mkdir -p kubejs/data/deeperdarker/recipes
+cd kubejs/data/deeperdarker/recipes
+
+for item in axe boots chestplate helmet hoe leggings pickaxe shovel sword; do
+sudo tee resonarium_${item}_smithing.json > /dev/null <<EOF
+{
+  "type": "minecraft:smithing_transform",
+  "template": { "item": "minecraft:netherite_upgrade_smithing_template" },
+  "base": { "item": "minecraft:iron_${item}" },
+  "addition": { "item": "deeperdarker:resonarium_plate" },
+  "result": { "item": "deeperdarker:resonarium_${item}" }
+}
+EOF
+done
+
+cd -
+
+# desativar o script KubeJS anterior, se existir (não manter os dois ativos)
+sudo mv kubejs/server_scripts/deeperdarker_resonarium.js kubejs/server_scripts/deeperdarker_resonarium.js.disabled
+```
+
+Depois de `/reload` ou reiniciar:
+
+```bash
+grep -i 'Failed to parse recipe.*deeperdarker' logs/latest.log   # esperado: sem saída
+```
+
+Rollback: remover `kubejs/data/deeperdarker/recipes/resonarium_*_smithing.json` e, se desejado, restaurar o `.js` renomeando o `.disabled`. Em atualização do mod, aplicar a regra da seção 7.

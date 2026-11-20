@@ -1,8 +1,9 @@
 ## 2026-11-20 — Deeper and Darker: receitas Resonarium
 
-- Documentado o erro das nove receitas `smithing_transform` com `template: []` no Deeper and Darker Forge 1.20.1-1.3.3.
-- Registrada a proposta de substituição via KubeJS, preservando a Smithing Table e usando `minecraft:netherite_upgrade_smithing_template` como ingrediente adicional.
-- **Pendente:** instalação do script, validação do carregamento e teste funcional no servidor. Não marcar como correção concluída antes dessas verificações.
+- Deeper and Darker 1.20.1-1.3.3: corrigido `Failed to parse recipe 'deeperdarker:resonarium_*_smithing' ... Ingredient 'template' can't be empty!` (nove receitas com `template: []` no JAR do mod).
+- Tentativa com script KubeJS (`event.smithing`) não eliminou o aviso, porque o parse da receita original ocorre antes do script. Script desativado (`.js.disabled`).
+- Solução aplicada: nove JSONs de override em `kubejs/data/deeperdarker/recipes/` usando `minecraft:netherite_upgrade_smithing_template`. Validado pelo log: `grep -i 'Failed to parse recipe.*deeperdarker'` sem saída.
+- Mudança de balanceamento: as ferramentas/armaduras de Resonarium passam a exigir um template de netherite. Crafting no jogo não testado. Seção 12 adicionada ao runbook de reaplicação.
 
 ## 2026-11-11 — correções de advancements
 

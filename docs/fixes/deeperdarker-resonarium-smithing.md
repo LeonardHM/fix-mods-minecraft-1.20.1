@@ -1,7 +1,8 @@
 # Deeper and Darker — receitas de Ferramentas de Resonarium na Smithing Table
 
-**Ambiente analisado:** Minecraft 1.20.1, Forge/Arclight, Deeper and Darker Forge 1.20.1-1.3.3.  
-**Estado:** diagnóstico confirmado; correção KubeJS proposta, ainda pendente de aplicação e validação no servidor.
+**Status:** aplicada no servidor e validada pelo log (teste funcional no jogo não registrado)  
+**Ambiente:** Minecraft 1.20.1, Forge/Arclight, Deeper and Darker Forge 1.20.1-1.3.3 (`deeperdarker-forge-1.20.1-1.3.3.jar`), KubeJS  
+**Data do registro:** 2026-11-20
 
 ## 1. Erro original
 
@@ -12,115 +13,101 @@ Failed to parse recipe 'deeperdarker:resonarium_*_smithing[minecraft:smithing_tr
 Falling back to vanilla: Ingredient 'template' can't be empty!
 ```
 
-A inspeção do arquivo original dentro de `deeperdarker-forge-1.20.1-1.3.3.jar` confirmou que a receita contém:
+A inspeção do arquivo original dentro do JAR do mod confirmou que a receita contém `"template": []`:
 
 ```json
 {
   "type": "minecraft:smithing_transform",
-  "addition": {
-    "item": "deeperdarker:resonarium_plate"
-  },
-  "base": {
-    "item": "minecraft:iron_pickaxe"
-  },
-  "result": {
-    "item": "deeperdarker:resonarium_pickaxe"
-  },
+  "addition": { "item": "deeperdarker:resonarium_plate" },
+  "base": { "item": "minecraft:iron_pickaxe" },
+  "result": { "item": "deeperdarker:resonarium_pickaxe" },
   "template": []
 }
 ```
 
-A causa está confirmada: o campo `template` é uma lista vazia. O carregador rejeita o ingrediente vazio. Não foi encontrada uma atualização do mod que resolva o problema na versão usada.
+## 2. Causa
 
-## 2. Receitas afetadas
+Confirmada: o mod distribui as nove receitas com o campo `template` como lista vazia, e o KubeJS rejeita o ingrediente vazio ao ler o JSON original. O erro vem da receita do próprio mod, não de script do servidor. Não foi encontrada atualização do Deeper and Darker que resolva isso na versão usada.
 
-As nove receitas identificadas no JAR são:
+## 3. Receitas afetadas
 
-- `deeperdarker:resonarium_axe_smithing`
-- `deeperdarker:resonarium_boots_smithing`
-- `deeperdarker:resonarium_chestplate_smithing`
-- `deeperdarker:resonarium_helmet_smithing`
-- `deeperdarker:resonarium_hoe_smithing`
-- `deeperdarker:resonarium_leggings_smithing`
-- `deeperdarker:resonarium_pickaxe_smithing`
-- `deeperdarker:resonarium_shovel_smithing`
-- `deeperdarker:resonarium_sword_smithing`
+`deeperdarker:resonarium_<peça>_smithing`, para `axe`, `boots`, `chestplate`, `helmet`, `hoe`, `leggings`, `pickaxe`, `shovel` e `sword`.
 
-## 3. Correção proposta via KubeJS
+## 4. Tentativa 1: script KubeJS (não resolveu o aviso)
 
-A proposta é remover as receitas inválidas pelo ID e registrá-las novamente como receitas de transformação de ferraria, usando um template vanilla válido. A Smithing Table permanece como estação de criação.
+Foi instalado `kubejs/server_scripts/deeperdarker_resonarium.js`, que removia cada receita por ID e a recriava com `event.smithing(...)` usando `minecraft:netherite_upgrade_smithing_template`. O log mostra o script carregado (`Loaded script server_scripts:deeperdarker_resonarium.js`) e, mesmo assim, as nove mensagens `Ingredient 'template' can't be empty!` continuaram aparecendo.
 
-**Ingredientes propostos:**
+Explicação: o aviso é emitido ao fazer o parse da receita original, antes de o evento do script rodar. O script não consegue impedir esse parse; apenas substitui a receita depois.
+
+## 5. Solução aplicada: override por datapack
+
+Foram criados nove JSONs em `kubejs/data/deeperdarker/recipes/`, com o mesmo nome dos originais (`resonarium_<peça>_smithing.json`), que substituem os arquivos do mod. Com isso a receita original (`template: []`) deixa de ser lida.
+
+Conteúdo (exemplo: picareta):
+
+```json
+{
+  "type": "minecraft:smithing_transform",
+  "template": { "item": "minecraft:netherite_upgrade_smithing_template" },
+  "base": { "item": "minecraft:iron_pickaxe" },
+  "addition": { "item": "deeperdarker:resonarium_plate" },
+  "result": { "item": "deeperdarker:resonarium_pickaxe" }
+}
+```
 
 | Slot | Item |
 |---|---|
 | Template | `minecraft:netherite_upgrade_smithing_template` |
-| Base | Ferramenta de ferro correspondente |
+| Base | Ferramenta/armadura de ferro correspondente |
 | Addition | `deeperdarker:resonarium_plate` |
-| Resultado | Ferramenta de Resonarium correspondente |
+| Resultado | Peça de Resonarium correspondente |
 
-Arquivo proposto: `kubejs/server_scripts/deeperdarker_resonarium.js`
+Comandos: [runbook, seção 12](../maintenance/reapply-fix-commands.md).
 
-```javascript
-ServerEvents.recipes(event => {
-    const template = 'minecraft:netherite_upgrade_smithing_template'
-    const addition = 'deeperdarker:resonarium_plate'
-
-    const items = [
-        'axe',
-        'boots',
-        'chestplate',
-        'helmet',
-        'hoe',
-        'leggings',
-        'pickaxe',
-        'shovel',
-        'sword'
-    ]
-
-    items.forEach(item => {
-        const id = `deeperdarker:resonarium_${item}_smithing`
-
-        event.remove({ id: id })
-
-        event.smithing(
-            `deeperdarker:resonarium_${item}`,
-            template,
-            `minecraft:iron_${item}`,
-            addition
-        ).id(id)
-    })
-})
-```
+O script `.js` da tentativa 1 foi desativado renomeando-o para `kubejs/server_scripts/deeperdarker_resonarium.js.disabled` (o KubeJS só carrega `.js`). Os dois métodos não devem ficar ativos ao mesmo tempo, pois definiriam a mesma receita.
 
 ### Efeito da alteração
 
-- As nove receitas continuam usando a Smithing Table.
-- O jogador passa a precisar de um Netherite Upgrade Smithing Template adicional em cada transformação.
-- Os IDs das receitas são preservados.
-- Os ingredientes base, addition e os resultados correspondem ao padrão identificado nos JSONs originais.
+- As nove receitas continuam na Smithing Table e mantêm os mesmos IDs.
+- **Mudança de balanceamento:** o jogador passa a precisar de um Netherite Upgrade Smithing Template em cada transformação. O mod original não exigia template (era justamente o campo vazio).
 - O JAR do Deeper and Darker não é modificado.
 
-## 4. Aplicação e validação pendentes
+## 6. Backup
 
-A documentação registra a solução proposta, mas **não há confirmação de que o script tenha sido instalado ou executado no servidor**.
+Não há backup, pois nenhum arquivo existente foi alterado: os JSONs são novos e o script foi apenas renomeado (o próprio `.disabled` é o backup).
 
-Após instalar o arquivo, reiniciar o servidor ou recarregar as receitas conforme o procedimento disponível na versão do KubeJS, verificar:
+## 7. Validação
 
-1. ausência das nove mensagens `Ingredient 'template' can't be empty!`;
-2. ausência de erros de registro KubeJS para as receitas;
-3. presença das nove receitas na Smithing Table;
-4. teste funcional de pelo menos uma ferramenta, confirmando template, ferramenta de ferro e Resonarium Plate nos slots corretos.
-
-Somente depois desses testes marcar a correção como validada. A ausência do erro de parsing, por si só, não comprova o funcionamento do crafting.
-
-## 5. Rollback
-
-Com o servidor parado, remova somente o arquivo de override:
+Após aplicar os JSONs, desativar o script e recarregar:
 
 ```bash
-sudo -u crafty rm kubejs/server_scripts/deeperdarker_resonarium.js
+grep -i 'Failed to parse recipe.*deeperdarker' logs/latest.log   # sem saída (0 ocorrências)
 ```
 
-Em seguida, reinicie o servidor e confirme que o override deixou de ser carregado. Sem o override, as receitas originais com `template: []` voltarão a falhar no carregamento.
+Resultado: o comando não retornou nada; os nove avisos deixaram de aparecer.
 
+Limites da validação:
+
+- Confirma o desaparecimento do erro de parsing. **Não foi registrado** teste de crafting no jogo (template de netherite + ferramenta de ferro + Resonarium Plate na Smithing Table). Fazer ao menos um teste antes de considerar a receita funcionalmente confirmada.
+- O método de recarga usado (`/reload` ou reinício) não foi registrado.
+
+## 8. Avisos que continuam no log e não têm relação
+
+Na mesma busca apareceram outros avisos que não fazem parte desta correção e permanecem sem tratamento:
+
+- `GregTechCEu ... failed to add recipe from staging into lookup DB` para `deeperdarker:copper_ingot_from_smelting_gloomslate_copper_ore` e `deeperdarker:lapis_lazuli_from_smelting_gloomslate_lapis_ore` (receitas de fundição; não investigado).
+- `mixins.deeperdarker.json:PhantomRendererMixin`: o alvo `net.minecraft.client.renderer.entity.PhantomRenderer` é classe de cliente e não existe no servidor (aviso esperado em servidor dedicado).
+
+## 9. Rollback
+
+Com o servidor parado, remover os nove JSONs de override:
+
+```bash
+sudo rm kubejs/data/deeperdarker/recipes/resonarium_*_smithing.json
+```
+
+Sem eles, as receitas originais com `template: []` voltam a ser lidas e o aviso reaparece. Se também quiser restaurar o script da tentativa 1: `sudo mv kubejs/server_scripts/deeperdarker_resonarium.js.disabled kubejs/server_scripts/deeperdarker_resonarium.js`.
+
+## 10. Atenção a atualizações
+
+Se o Deeper and Darker for atualizado, conferir se a receita original ainda tem `template: []`. Se o mod corrigir o campo, o override deixa de ser necessário e pode ser removido (o override prevalece sobre o mod e manteria o template de netherite como exigência).

@@ -12,9 +12,6 @@ Repositório de referência para registrar configuração, diagnóstico, correç
 
 ## Correções documentadas
 
-A correção proposta para as receitas de Ferramentas de Resonarium do Deeper and Darker está documentada em [deeperdarker-resonarium-smithing.md](docs/fixes/deeperdarker-resonarium-smithing.md). A aplicação e validação no servidor ainda estão pendentes.
-
-
 As correções abaixo foram aplicadas no ambiente de referência e tiveram validação registrada. A validação de inicialização ou de /reload confirma que o erro correspondente deixou de aparecer; ela não substitui testes funcionais dentro do jogo.
 
 | Área | Mods/recursos | Correção registrada |
@@ -30,6 +27,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 | Configuração de Mixin | FTB XMod Compat Aero (ftbxaerocompat 1.4.0) | Adicionado `minVersion` ao `ftbxaerocompat.mixins.json` no JAR do servidor (somente servidor; clientes inalterados). |
 | Livro do Patchouli | Reborn Storage 5.0.7, Patchouli 1.20.1-85 | Adicionado `use_resource_pack: true` ao `book.json` no JAR do servidor (somente servidor; clientes inalterados). |
 | Materiais do Tinkers' Construct | AllTheModium 2.5.8, Tinkers' Construct 3.12.1.231 | Trocado `tconstruct:extra` por `tconstruct:binding` vazio nos stats de unobtainium, vibranium e allthemodium, dentro do JAR do AllTheModium. |
+| Receitas da Smithing Table | Deeper and Darker 1.3.3 | Criado override por datapack (9 JSONs em `kubejs/data/deeperdarker/recipes/`) com template de netherite no lugar de `template: []`; script KubeJS anterior desativado. |
 
 ### Resultado e ressalvas
 
@@ -42,6 +40,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - A correção do livro do Reborn Storage vale só para o servidor: o erro sumiu do log do servidor, mas os clientes mantêm o JAR original e continuam sem o livro.
 - A correção do `minVersion` do ftbxaerocompat foi validada por reinicialização (0 ocorrências de erro no log do servidor); clientes inalterados.
 - A correção ModernFix x Structurize foi validada por reinicialização (0 ocorrências do aviso); a colagem de schematics no jogo não foi testada e a otimização `dynamic_dfu` ficou desligada.
+- A correção do Deeper and Darker (Resonarium) foi validada pelo log (0 ocorrências de `Failed to parse recipe.*deeperdarker`); o crafting no jogo não foi testado e a receita agora exige template de netherite.
 - Permanecem outros diagnósticos pendentes, incluindo GregTech CEu, Patchouli, PneumaticCraft, tags e advancements. Consulte a lista de pendências antes de alterar outros arquivos.
 
 ## Estrutura
@@ -62,6 +61,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - [Reborn Storage: livro do Patchouli (somente servidor)](docs/fixes/rebornstorage-patchouli-book.md)
 - [ftbxaerocompat: `minVersion` do Mixin (somente servidor)](docs/fixes/ftbxaerocompat-mixin-minversion.md)
 - [ModernFix `dynamic_dfu` x Structurize](docs/fixes/modernfix-dynamic-dfu-structurize.md)
+- [Deeper and Darker: receitas de Resonarium](docs/fixes/deeperdarker-resonarium-smithing.md)
 - [Diagnósticos pendentes](docs/diagnostics/pending-issues.md)
 
 ## Regras
