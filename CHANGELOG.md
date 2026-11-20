@@ -1,3 +1,9 @@
+## 2026-11-20 — Deeper and Darker: receitas Resonarium
+
+- Documentado o erro das nove receitas `smithing_transform` com `template: []` no Deeper and Darker Forge 1.20.1-1.3.3.
+- Registrada a proposta de substituição via KubeJS, preservando a Smithing Table e usando `minecraft:netherite_upgrade_smithing_template` como ingrediente adicional.
+- **Pendente:** instalação do script, validação do carregamento e teste funcional no servidor. Não marcar como correção concluída antes dessas verificações.
+
 ## 2026-11-11 — correções de advancements
 
 - Industrial Foregoing 3.5.22: corrigido o predicado do advancement `simulated_hydroponic_bed`, usando `tag: forge:plastic` em vez de tratar a tag como ID de item.
