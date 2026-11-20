@@ -12,6 +12,9 @@ Repositório de referência para registrar configuração, diagnóstico, correç
 
 ## Correções documentadas
 
+A correção proposta para as receitas de Ferramentas de Resonarium do Deeper and Darker está documentada em [deeperdarker-resonarium-smithing.md](docs/fixes/deeperdarker-resonarium-smithing.md). A aplicação e validação no servidor ainda estão pendentes.
+
+
 As correções abaixo foram aplicadas no ambiente de referência e tiveram validação registrada. A validação de inicialização ou de /reload confirma que o erro correspondente deixou de aparecer; ela não substitui testes funcionais dentro do jogo.
 
 | Área | Mods/recursos | Correção registrada |
