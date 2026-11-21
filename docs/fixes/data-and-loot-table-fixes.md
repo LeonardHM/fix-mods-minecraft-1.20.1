@@ -168,6 +168,7 @@ As três correções abaixo foram aplicadas por overrides em `kubejs/data/` e ve
 - **Override:** `kubejs/data/sob/advancements/get_prickly_pear.json`.
 - **Correção:** alterar somente `display.icon.item` para `minecraft:apple`. O critério original, que verifica a tag `forge:fruits/prickly_pear`, foi preservado.
 - **Validação:** após `/reload`, a busca por `get_prickly_pear` e erros de parsing de advancements não retornou mensagens correspondentes.
+- **Atualização 2026-11-21:** obsoleto. Os mods Delight (incluindo o Delightful) foram removidos e o override foi movido para `~/backups/`, pois o pai `farmersdelight:main/get_fd_seed` deixou de existir. Ver [delight-mods-removal-leftovers.md](delight-mods-removal-leftovers.md).
 
 ### Legendary Monsters 2.2.4 — ícone inexistente em `defeat_ambusher`
 

@@ -1,7 +1,7 @@
 # Diagnósticos pendentes
 
 **Ambiente de referência:** Arclight / Forge 1.20.1, Forge 47.4.10, Java 17 (Amazon Corretto)  
-**Última revisão registrada:** 2026-11-11
+**Última revisão registrada:** 2026-11-21
 
 Este documento separa mensagens observadas no log de causas já comprovadas. Uma mensagem de erro não significa, por si só, que exista impacto funcional no jogo.
 
@@ -64,7 +64,8 @@ Foram observados os seguintes registros:
 | Advancement | ID desconhecido |
 |---|---|
 | Industrial Foregoing — `industrialforegoing:recipes/misc/simulated_hydroponic_bed` | `forge:plastic` |
-| SOB — `sob:get_prickly_pear` | `sob:prickly_pear` |
+| SOB — `sob:get_prickly_pear` | `sob:prickly_pear` (**resolvido em 2026-11-21**: override removido junto com os mods Delight; ver `docs/fixes/delight-mods-removal-leftovers.md`) |
+| Supplementaries — `supplementaries:recipes/planter_rich` | `farmersdelight:rich_soil` (mod removido; vem do JAR do Supplementaries, afeta só o advancement que desbloqueia a receita) |
 | Legendary Monsters | `legendary_monsters:ancient_dripstone_shard` |
 
 **Estado:** pendente de verificar se são referências obsoletas, itens removidos/renomeados ou dados incompatíveis entre versões. O caso do Industrial Foregoing está descrito separadamente acima.
@@ -101,6 +102,8 @@ Foram observadas mensagens indicando que métodos de integração não possuem o
 - `EnergyCellIntegration.getName`
 - `FurnatorIntegration.getName`
 
+Confirmado pelos nomes das classes: as três pertencem à integração do Advanced Peripherals com o Powah (`advancedperipherals.common.addons.powah`).
+
 **Estado:** pendente de identificar as versões envolvidas e verificar se a integração está funcionalmente afetada.
 
 ## Critério para encerrar um diagnóstico
@@ -119,3 +122,17 @@ Antes de marcar qualquer item como corrigido, registrar:
 - CreateBetterFPS foi corrigido e validado conforme `docs/fixes/client-only-mixins.md`.
 - O histórico disponível não confirma alteração aplicada em ImmediatelyFast nem em ModernFix. Não desativar nem mover Mixins desses mods sem identificar a classe, o JSON exato e validar o efeito.
 - A identificação “ImmediatelyFast 1.20.4” foi esclarecida pelo usuário como apenas o nome do pacote; não deve ser tratada como evidência de que o servidor use Minecraft 1.20.4.
+
+## Avisos observados em 2026-11-20/21 (sem correção aplicada)
+
+Itens abaixo foram vistos nos logs desta sessão. Salvo indicação, a causa **não foi confirmada**.
+
+- **Mixins do `ae2cs`:** `ClassNotFoundException` para cinco classes do pacote `io.github.lounode.ae2cs` (`CircuitEtcherBlockEntity`, `CrystalPulverizerBlockEntity`, `CrystalAggregatorBlockEntity`, `EntropyVariationReactionChamberBlockEntity`, `EnergyComponent`). Hipótese: incompatibilidade de versão entre um addon do AE2 e o mod alvo. O JAR de origem ainda não foi identificado.
+- **Cataclysm 3.31 — `azure_seastone_brick_stair_from_stonecutting`:** `ItemStack 'result' can't be empty!`. **Causa confirmada:** a receita aponta para `cataclysm:azure_seastone_brick_stair` (singular), mas o item real é `azure_seastone_brick_stairs`. A receita correta (`..._stairs_from_stonecutting`) existe no mesmo JAR e não gera erro. Sem perda funcional; nenhuma ação necessária.
+- **Productive Bees:** receita `honeycomb_hyper_experience` com `Invalid empty fluid 'create_enchantment_industry:hyper_experience'`. O fluido não está registrado na versão instalada do Create Enchantment Industry; versões não verificadas.
+- **AllTheModium:** receita de fundição `vibranium_allthemodium_alloy_ingot` com o fluido `allthemodium:molten_atmvib` não registrado. Está na mesma área da correção do Tinkers' Construct, mas não há relação confirmada.
+- **Theurgy:** `lava_from_crystallized_lava` sem as chaves `evaporant` e `evaporantAmount`.
+- **Caupona:** `cooking/fish_chowder` com erro `null` e sem detalhe; precisa do stack trace.
+- **GregTech CEu:** dezenas de `failed to add recipe from staging into lookup DB` para receitas de smelting de vários mods. Causa não investigada.
+- **Curios / Thermal:** `Duplicate Capability Key: curios:item` aparece nos mesmos milissegundos da consulta do Thermal ao combustível de `mekanism:hdpe_elytra`. A relação é sugerida pelo horário, não confirmada. O Thermal informa que o item deve funcionar como combustível.
+- **Deeper and Darker — `PhantomRendererMixin`:** mixin de classe de cliente (`PhantomRenderer`) carregado no servidor; aviso esperado em servidor dedicado. Candidato ao tratamento descrito em `docs/fixes/client-only-mixins.md`, se o log precisar ser limpo.

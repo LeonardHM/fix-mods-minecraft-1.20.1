@@ -109,6 +109,8 @@ Uma atualização pode substituir recursos internos dos JARs e invalidar overrid
 
 ## 5. Advancements — Industrial Foregoing, Delightful e Legendary Monsters
 
+> **Atualização 2026-11-21:** o override do Delightful (`sob:get_prickly_pear`) está obsoleto — os mods Delight foram removidos e o arquivo foi retirado (ver seção 15). Não reaplicar essa parte.
+
 Os overrides abaixo foram criados a partir dos JSONs originais dos JARs. O script faz backup de um override anterior, quando existir, e altera somente o campo necessário. Execute na raiz do servidor:
 
 ```bash
@@ -327,3 +329,117 @@ grep -i 'Failed to parse recipe.*deeperdarker' logs/latest.log   # esperado: sem
 ```
 
 Rollback: remover `kubejs/data/deeperdarker/recipes/resonarium_*_smithing.json` e, se desejado, restaurar o `.js` renomeando o `.disabled`. Em atualização do mod, aplicar a regra da seção 7.
+
+
+## 13. Caupona — overrides das receitas de stonecutter
+
+Correção documentada em [caupona-stonecutter-result-format.md](../fixes/caupona-stonecutter-result-format.md). Execute na raiz do servidor. Comandos executados:
+
+```bash
+D=kubejs/data/caupona/recipes/stonecutter
+sudo mkdir -p $D
+for r in stone sandstone felsic_tuff; do
+sudo tee $D/${r}_road_remove_curb.json > /dev/null <<EOF
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "caupona:${r}_road_side" },
+  "result": "caupona:${r}_road",
+  "count": 1
+}
+EOF
+done
+```
+
+Depois de `/reload` ou reiniciar:
+
+```bash
+grep -i 'Failed to parse recipe.*caupona' logs/latest.log   # esperado: sem saída
+```
+
+Rollback: `sudo rm kubejs/data/caupona/recipes/stonecutter/*_road_remove_curb.json`. Em atualização do mod, aplicar a regra da seção 7.
+
+
+## 14. Mekanism Ponders — `minVersion` no `mekanism_ponders.mixins.json` (somente servidor)
+
+Correção documentada em [mekanism-ponders-mixin-minversion.md](../fixes/mekanism-ponders-mixin-minversion.md). Execute na raiz do servidor, com o servidor parado. Comandos executados:
+
+```bash
+J=mods/mekanism_ponders-1.0.4-1.20.1.jar
+unzip -p $J mekanism_ponders.mixins.json | head -8
+sudo cp -a $J $J.original
+sudo python3 - "$J" <<'EOF'
+import sys, json, shutil, tempfile, os, zipfile
+jar = sys.argv[1]
+name = "mekanism_ponders.mixins.json"
+tmp = os.path.join(tempfile.mkdtemp(), "new.jar")
+with zipfile.ZipFile(jar) as zin, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+    for i in zin.infolist():
+        data = zin.read(i.filename)
+        if i.filename == name:
+            d = json.loads(data)
+            if "minVersion" not in d:
+                d = {"minVersion": "0.8", **d}
+            data = (json.dumps(d, indent=2) + "\n").encode()
+        zout.writestr(i, data)
+shutil.copyfile(tmp, jar)
+EOF
+unzip -p $J mekanism_ponders.mixins.json | head -6
+```
+
+A saída final deve mostrar `"minVersion": "0.8"` como primeira chave. Depois de reiniciar:
+
+```bash
+grep -i 'mekanism_ponders.*minVersion' logs/latest.log   # esperado: sem saída
+```
+
+Rollback: com o servidor parado, restaurar o `.original` sobre o JAR. Em atualização do mod, aplicar a regra da seção 7.
+
+
+## 15. Sobras da remoção dos mods Delight
+
+Correção documentada em [delight-mods-removal-leftovers.md](../fixes/delight-mods-removal-leftovers.md). Execute na raiz do servidor, com o servidor parado. Comandos executados:
+
+```bash
+mkdir -p ~/backups/hostilenetworks
+
+# datapack e pasta de backup fora dos caminhos carregados
+sudo mv world/datapacks/compat_twilightdelight_no_neapolitan ~/backups/
+sudo mv kubejs/data/hostilenetworks/data_models/backup_before_delight_cleanup ~/backups/
+
+# override obsoleto do Delightful
+sudo mv kubejs/data/sob/advancements/get_prickly_pear.json ~/backups/
+
+# modelos do Hostile Neural Networks (troca de itens: escolha do usuário)
+M=kubejs/data/hostilenetworks/data_models
+sudo cp -a $M/{pig,hoglin,endermite}.json ~/backups/hostilenetworks/
+sudo sed -i 's/farmersdelight:ham/minecraft:porkchop/' $M/{pig,hoglin}.json
+sudo sed -i 's/endersdelight:mite_crust/minecraft:chorus_fruit/' $M/endermite.json
+
+# estufa: ignora drops de itens que não existem
+F=kubejs/server_scripts/mods/gtceu/greenhouse_recipes.js
+sudo cp -a $F ~/backups/greenhouse_recipes.js.original
+sudo sed -i 's/if (!drop.output || !drop.output.item) return;/if (!drop.output || !drop.output.item || !Item.exists(drop.output.item)) return;/' $F
+
+# Neural Node: ignora saídas vazias
+F=kubejs/server_scripts/mods/gtceu/neural_node_recipes.js
+sudo cp -a $F ~/backups/neural_node_recipes.js.original
+sudo sed -i 's/\.itemOutputs(outputs)/.itemOutputs(outputs.filter(o => !Item.of(o).isEmpty()))/' $F
+```
+
+Varredura de referências restantes (não excluir diretórios chamados `mods`, pois existe `kubejs/server_scripts/mods/`):
+
+```bash
+grep -rIn -i -o '.\{0,50\}delight.\{0,50\}' kubejs --include='*.js' --include='*.json' --include='*.zs' | grep -v '/assets/'
+ls mods | grep -i delight
+```
+
+Depois de reiniciar:
+
+```bash
+grep -c 'oak_hedge' logs/latest.log                     # esperado: 0
+grep -c 'sob:get' logs/latest.log                       # esperado: 0
+grep -c 'Failed parsing data_models' logs/latest.log    # esperado: 0
+grep -E '/(ERROR|FATAL)\]' logs/latest.log | grep -E 'neural_node|Invalid or empty'   # esperado: sem saída
+```
+
+Rollback: copiar os arquivos de `~/backups/` de volta (servidor parado), sem devolver `backup_before_delight_cleanup/` para dentro de `kubejs/data/`.

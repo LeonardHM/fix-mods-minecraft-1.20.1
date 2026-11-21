@@ -18,7 +18,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 |---|---|---|
 | Mixins exclusivos do cliente | CreateBetterFPS, CoFH Core, AdvancedAE, Legendary Monsters | Movidos para a lista client somente os Mixins que referenciavam classes/APIs do cliente. |
 | Dados e receitas | SGJourney, Occultism | Corrigido o formato do JSON da tabela de endereços; removido override de receita Thorium vazio (0 bytes). |
-| Advancements | Industrial Foregoing, Delightful, Legendary Monsters | Corrigidos predicado de tag de itens e dois ícones que referenciavam itens inexistentes. |
+| Advancements | Industrial Foregoing, Delightful, Legendary Monsters | Corrigidos predicado de tag de itens e dois ícones que referenciavam itens inexistentes. (O override do Delightful ficou obsoleto com a remoção dos mods Delight.) |
 | Loot tables | Naturalist, MegaCells, ExtendedAE | Criados overrides KubeJS para corrigir o ID de drop da tartaruga e suprimir loot tables de interfaces EMC opcionais sem bloco registrado. |
 | Permissões/diretórios | ResourcefulLib | Criado /home/crafty com proprietário/grupo crafty e modo 0750. |
 | Datapack de compatibilidade | Citadel, SFM, Crypt Loot | Corrigidos 12 livros para o formato NBT da 1.20.1, substituída a loot table do Buffer por tabela vazia e corrigido o campo value para name. |
@@ -28,6 +28,9 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 | Livro do Patchouli | Reborn Storage 5.0.7, Patchouli 1.20.1-85 | Adicionado `use_resource_pack: true` ao `book.json` no JAR do servidor (somente servidor; clientes inalterados). |
 | Materiais do Tinkers' Construct | AllTheModium 2.5.8, Tinkers' Construct 3.12.1.231 | Trocado `tconstruct:extra` por `tconstruct:binding` vazio nos stats de unobtainium, vibranium e allthemodium, dentro do JAR do AllTheModium. |
 | Receitas da Smithing Table | Deeper and Darker 1.3.3 | Criado override por datapack (9 JSONs em `kubejs/data/deeperdarker/recipes/`) com template de netherite no lugar de `template: []`; script KubeJS anterior desativado. |
+| Receitas de stonecutter | Caupona 0.4.14 | Criados 3 overrides por datapack com `result` em string (o JAR traz o formato `{ "id": ... }` de versões novas). |
+| Mixin | Mekanism Ponders 1.0.4 | Adicionado `minVersion` ao `mekanism_ponders.mixins.json` no JAR do servidor (somente servidor; clientes inalterados). |
+| Sobras da remoção dos mods Delight | KubeJS, Hostile Neural Networks, GregTech CEu, datapacks | Removidos/ajustados datapack, override de advancement, modelos de mobs e scripts de estufa e Neural Node que referenciavam itens dos mods removidos. |
 
 ### Resultado e ressalvas
 
@@ -41,6 +44,7 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - A correção do `minVersion` do ftbxaerocompat foi validada por reinicialização (0 ocorrências de erro no log do servidor); clientes inalterados.
 - A correção ModernFix x Structurize foi validada por reinicialização (0 ocorrências do aviso); a colagem de schematics no jogo não foi testada e a otimização `dynamic_dfu` ficou desligada.
 - A correção do Deeper and Darker (Resonarium) foi validada pelo log (0 ocorrências de `Failed to parse recipe.*deeperdarker`); o crafting no jogo não foi testado e a receita agora exige template de netherite.
+- As correções do Caupona, Mekanism Ponders e das sobras dos mods Delight foram validadas pelo log em 2026-11-21 (os erros correspondentes deixaram de aparecer). Receitas do Neural Node, modelos do Hostile Neural Networks, estufa e pedra de corte não foram testados no jogo.
 - Permanecem outros diagnósticos pendentes, incluindo GregTech CEu, Patchouli, PneumaticCraft, tags e advancements. Consulte a lista de pendências antes de alterar outros arquivos.
 
 ## Estrutura
@@ -62,6 +66,9 @@ As correções abaixo foram aplicadas no ambiente de referência e tiveram valid
 - [ftbxaerocompat: `minVersion` do Mixin (somente servidor)](docs/fixes/ftbxaerocompat-mixin-minversion.md)
 - [ModernFix `dynamic_dfu` x Structurize](docs/fixes/modernfix-dynamic-dfu-structurize.md)
 - [Deeper and Darker: receitas de Resonarium](docs/fixes/deeperdarker-resonarium-smithing.md)
+- [Caupona: receitas de stonecutter](docs/fixes/caupona-stonecutter-result-format.md)
+- [Mekanism Ponders: `minVersion` do Mixin (somente servidor)](docs/fixes/mekanism-ponders-mixin-minversion.md)
+- [Remoção dos mods Delight: sobras em datapacks e scripts](docs/fixes/delight-mods-removal-leftovers.md)
 - [Diagnósticos pendentes](docs/diagnostics/pending-issues.md)
 
 ## Regras

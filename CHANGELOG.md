@@ -1,3 +1,11 @@
+## 2026-11-21 — Caupona, Mekanism Ponders e sobras dos mods Delight
+
+- Caupona 0.4.14: corrigido `ItemStack 'result' can't be empty!` em 3 receitas de stonecutter (`*_road_remove_curb`), cujo JAR usa `result: { "id": ... }` (formato de versões novas). Overrides por datapack com `result` em string. Validado pelo log; pedra de corte não testada.
+- Mekanism Ponders 1.0.4: corrigido `Mixin config mekanism_ponders.mixins.json does not specify "minVersion"` acrescentando `"minVersion": "0.8"` ao JSON dentro do JAR do servidor (valor por analogia com o ftbxaerocompat). Backup `.original`; clientes inalterados.
+- Remoção dos mods Delight: movidos para `~/backups/` o datapack `compat_twilightdelight_no_neapolitan`, a pasta `backup_before_delight_cleanup` (estava em `kubejs/data/hostilenetworks/data_models/`) e o override `sob:get_prickly_pear` (torna obsoleta a correção do Delightful de 2026-11-11). Trocados itens nos modelos `pig`, `hoglin` e `endermite` do Hostile Neural Networks. Ajustados os scripts `greenhouse_recipes.js` (guarda `Item.exists`) e `neural_node_recipes.js` (filtro de saídas vazias).
+- Validado por reinicialização: sumiram os erros de tags do Twilight Delight, `data_models`, `sob:get_prickly_pear`, `oak_hedge`, `neural_node/elder_guardian` e do `minVersion` do Mekanism Ponders. Nenhum teste no jogo.
+- Pendências atualizadas (`pending-issues.md`): novos avisos observados e referências Delight deixadas sem alteração. Seções 13, 14 e 15 adicionadas ao runbook.
+
 ## 2026-11-20 — Deeper and Darker: receitas Resonarium
 
 - Deeper and Darker 1.20.1-1.3.3: corrigido `Failed to parse recipe 'deeperdarker:resonarium_*_smithing' ... Ingredient 'template' can't be empty!` (nove receitas com `template: []` no JAR do mod).
